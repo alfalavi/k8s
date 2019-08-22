@@ -1,6 +1,26 @@
 
-coredns
+##############  coredns
 
-To list coredns pods and find which workers coredns is running on:
+##To list coredns pods and find which workers coredns is running on:
 
 kubectl get pod -n kube-system -o wide -l eks.amazonaws.com/component=coredns
+
+## to fetch the coredns pod name:
+
+COREDNS_POD=$(kubectl get pod -n kube-system -l eks.amazonaws.com/component=coredns -o jsonpath='{.items[0].metadata.name}')
+
+## to get coredns configmap file:
+
+kubectl get cm coredns -o yaml -n kube-system
+
+## to get coredns logs:
+
+for p in $(kubectl get pods --namespace=kube-system -l k8s-app=kube-dns -o name); do kubectl logs --namespace=kube-system $p; done
+
+## to get coredns deployment:
+
+kubectl -n kube-system get deploy coredns -o yaml
+
+## Check dnsPolicy used by Pods in different namespaces
+In Kubernetes, by default `ClusterFirst` DNS policy is used, which suggest how DNS should be configured for a pod. You can check `dnsPolicy` for pods in a different namespace like:
+    kubectl -n <namespace> get pods <podname> -o jsonpath="{.spec.dnsPolicy}"
