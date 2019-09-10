@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-auth
+  namespace: kube-system
+data:
+  mapRoles: |
+    - rolearn: arn:aws:iam::244815535546:role/sard-eks-ng-NodeInstanceRole-1O0RE64HV72YJ
+      username: system:node:{{EC2PrivateDNSName}}
+      groups:
+        - system:bootstrappers
+        - system:nodes
+    - rolearn: arn:aws:iam::244815535546:role/Admin
+      username: Admin
+      groups:
+        - system:masters
